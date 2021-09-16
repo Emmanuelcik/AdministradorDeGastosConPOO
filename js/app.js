@@ -30,8 +30,12 @@ class Ui {
 
     impimirAlerta(mensaje, tipo){
         //Crear la alerta
+        const validar = document.querySelector(".validar");
+        if(validar){
+            validar.remove();
+        }
         const alerta = document.createElement("div");
-        alerta.classList.add("text-center", "alert");
+        alerta.classList.add("text-center", "alert", "validar");
         if(tipo === "error"){
             alerta.classList.add("alert-danger");
         }else if (tipo === "success"){
@@ -47,6 +51,35 @@ class Ui {
             div.remove();
         },3000)
 
+    }
+    agregarGastoListado(gastos){
+        this.limpiarHTML();//Limpia HTML PREVIO
+        //iterar sobre los gastos
+        gastos.forEach( (gasto)=>{
+            const {cantidad, nombre, id} = gasto;
+
+            //Crear un Li
+            const li = document.createElement("li");
+            li.className = "list-group-item d-flex justify-content-between aligns-items-center";
+            li.dataset.id = id;
+            li.innerHTML = `
+                ${nombre} <span class="badge badge-primary badge-pill"> ${cantidad} </span>
+            `;
+
+            //Agregar boton
+            const btn = document.createElement("button");
+            btn.innerHTML = "Borrar &times";
+            btn.classList.add("btn", "btn-danger", "borrar-gasto");
+            li.append(btn);
+
+            //Agregar al HTML
+            gastoListado.append(li);
+        } );
+    }
+    limpiarHTML() {
+        while(gastoListado.firstChild){
+            gastoListado.remove(gastoListado.firstChild);
+        }
     }
 }
 //instanciar 
@@ -86,5 +119,9 @@ function agregarGasto(e){
     }
     presupuesto.nuevoGasto(gasto);
     ui.impimirAlerta("Gasto Agregado", "success");
+    //Imprimir los gastos
+    const {gastos} = presupuesto;
+
+    ui.agregarGastoListado(gastos)
     form.reset();
 }
