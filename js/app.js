@@ -12,12 +12,19 @@ class Presupuesto{
     constructor(presupuesto){
         this.presupuesto = Number(presupuesto);
         this.restante = Number(presupuesto);
+        this.gastos = [];
     }   
 }
 class Ui {
-
+    insertarPresupuesto(cantidad){
+        const {presupuesto, restante} = cantidad;
+        const total = document.querySelector("#total");
+        total.textContent = presupuesto;
+        document.querySelector("#restante").textContent = restante;
+    }
 }
-
+//instanciar 
+const ui = new Ui();
 //Funciones
 
 function preguntarPresupuesto() {
@@ -26,5 +33,5 @@ function preguntarPresupuesto() {
         window.location.reload();
     }
     presupuesto = new Presupuesto(presupuestoUsuario);
-    console.log(presupuesto);
+    ui.insertarPresupuesto(presupuesto);
 }
