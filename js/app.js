@@ -20,10 +20,8 @@ class Presupuesto{
         this.calcularRestante();
     }
     calcularRestante(){
-        const gastado = this.gastos.reduce( (total, gasto) =>{
-            return total + gasto.cantidad, 0;
-        })
-        const restante = this.presupuesto - gastado;
+        const gastado = this.gastos.reduce( (total, gasto)=> total + gasto.cantidad, 0); 
+        this.restante = this.presupuesto - gastado;
     }
 }
 class Ui {
@@ -55,7 +53,7 @@ class Ui {
 
         setTimeout( ()=>{
             div.remove();
-        },3000)
+        },3000);
 
     }
     agregarGastoListado(gastos){
@@ -89,6 +87,24 @@ class Ui {
     }
     actualizarRestante(restante){
         document.querySelector("#restante").textContent = restante;
+    }
+    comprobarPresupuesto(presupuestoOBJ){
+        const {presupuesto, restante} = presupuestoOBJ;
+        const restanteDiv = document.querySelector(".restante");
+        //Comprobar 25%
+        if( (presupuesto/4) > restante){
+            restanteDiv.classList.remove("alert-success", "alert-warning");
+            restanteDiv.classList.add("alert-danger");
+        }else if((presupuesto / 2) > restante){
+            restanteDiv.classList.remove("alert-success", "alert-danger");
+            restanteDiv.classList.add("alert-warning");
+        }
+
+        //Si el total es menor a 0
+        if(restante <= 0 ){
+            ui.impimirAlerta("El presupuesto se ha agotado", "error");
+            form.querySelector("button[type='submit'").disabled = true;
+        }
     }
 }
 //instanciar 
@@ -133,5 +149,7 @@ function agregarGasto(e){
 
     ui.agregarGastoListado(gastos);
     ui.actualizarRestante(restante);
+    console.log(presupuesto);
+    ui.comprobarPresupuesto(presupuesto);//Mandamos toda la instancia
     form.reset();
 }
